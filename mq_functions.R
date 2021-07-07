@@ -9,7 +9,7 @@ last_qtr_filenames <- 'f21q2'
 app_data_dir <- paste0('./data/dash/',this_qtr_filenames,'/')
 current_q <- "2021_q3" 
 report_date <- "2021/03/01"
-uncat <- read_csv('./data/in/uncat_items.csv')
+uncat <- read_csv(paste0('./data/in/',this_qtr_filenames,'_uncat_items.csv'))
 
 divisions <- read_csv('./data/in/divisions.csv') %>%
   mutate(center = ifelse(is.na(center),'SASB',center),
@@ -81,7 +81,7 @@ get_plot_dfs <- function(minmanddf_file,uncat,current_q,report_date,app_data_dir
   count_sum <- calc_count_sum(mm_select, report_date)
   if (cat_only == FALSE) {
     qlab <- gsub(' \\d{2}(\\d{2})',paste0('_\\1'), count_sum$quarter_lab)[[1]]
-    baseline_count_sum <- readRDS('./data/in/count_sum_baseline_all.rds')
+    baseline_count_sum <- readRDS('./data/for_plots/count_sum_baseline_all.rds')
     both_count_sums <- count_sum %>%
       ungroup() %>%
       mutate(element = fct_reorder(element, ele_order)) %>%
@@ -94,7 +94,7 @@ get_plot_dfs <- function(minmanddf_file,uncat,current_q,report_date,app_data_dir
     write_csv(both_count_sums, paste0(app_data_dir,this_qtr_filenames,'_count_sum.csv'))
     
   } else {
-    count_sum_baseline_cat <- readRDS('./data/in/count_sum_baseline_cat.rds')
+    count_sum_baseline_cat <- readRDS('./data/for_plots/count_sum_baseline_cat.rds')
     both_count_sums <- count_sum_baseline_cat %>% bind_rows(count_sum) %>%
       ungroup() %>%
       mutate(element = fct_reorder(element, ele_order)) %>%
@@ -106,7 +106,7 @@ get_plot_dfs <- function(minmanddf_file,uncat,current_q,report_date,app_data_dir
   }
   
   elements <- c('title', 'typeOfResource', 'genre', 'date', 'identifier', 'location')
-  combine_ebd_ext_app('./data/in/ebd_bsln',mm_select,report_date,elements,app_data_dir,this_qtr_filenames,cat_only=cat_only)
+  combine_ebd_ext_app('./data/for_plots/ebd_bsln',mm_select,report_date,elements,app_data_dir,this_qtr_filenames,cat_only=cat_only)
 
 }
 

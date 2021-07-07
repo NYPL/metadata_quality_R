@@ -28,7 +28,7 @@ mmext_file <- paste0('./data/min_mand_dfs/extended/minmand_',this_qtr_filenames,
 minmand_ext <- get_mm_init(scoreextfile, NULL, mmext_file)
 
 ext_elements <- c('title', 'typeOfResource', 'genre', 'date', 'tms_identifiers', 'archives_identifiers', 'location')
-baseline_ebd_path <- './data/in/ebd_bsln_mmext'
+baseline_ebd_path <- './data/for_plots/ebd_bsln_mmext'
 get_ext_plot_df(mmext_file,cat_ids,ext_elements,report_date,app_data_dir,this_qtr_filenames,baseline_ebd_path,cat_only=FALSE)
 get_ext_plot_df(mmext_file,cat_ids,ext_elements,report_date,app_data_dir,this_qtr_filenames,baseline_ebd_path,cat_only=TRUE)
 
@@ -38,7 +38,7 @@ mmifapp_file <- paste0('./data/min_mand_dfs/if_applicable/minmand_',this_qtr_fil
 minmand_ifapp <- get_mm_init(scoreifappfile, NULL, mmifapp_file)
 
 scored_cols <- c('name', 'form', 'note', 'tableOfContents', 'description', 'subject','language')
-baseline_ebd_path <- './data/in/ebd_bsln_mmifapp'
+baseline_ebd_path <- './data/for_plots/ebd_bsln_mmifapp'
 get_ext_plot_df(mmifapp_file,cat_ids,scored_cols,report_date,app_data_dir,this_qtr_filenames,baseline_ebd_path,cat_only=FALSE)
 get_ext_plot_df(mmifapp_file,cat_ids,scored_cols,report_date,app_data_dir,this_qtr_filenames,baseline_ebd_path,cat_only=TRUE)
 
@@ -50,11 +50,3 @@ get_ext_vb_dfs(mmext_file,cat_ids,'./data/min_mand_dfs/extended/minmand_f19q3.rd
 vb_elements <- c('language','name', 'form', 'note', 'tableOfContents', 'description', 'subject')
 get_ext_vb_dfs(mmifapp_file,cat_ids,'./data/min_mand_dfs/if_applicable/minmand_f19q3.rds',report_date,vb_elements,app_data_dir,this_qtr_filenames,cat_only=FALSE)
 get_ext_vb_dfs(mmifapp_file,cat_ids,'./data/min_mand_dfs/if_applicable/minmand_f19q3.rds',report_date,vb_elements,app_data_dir,this_qtr_filenames,cat_only=TRUE)
-
-#### check missing ami ####
-ami_thisQ <- filter(minmand, ami == "AMI")
-ami_lastQ <- filter(readRDS(file = paste0('./data/min_mand_dfs/minmand_',last_qtr_filenames,'.rds')), ami == "AMI")
-
-missing <- ami_lastQ %>% filter(!mms_id %in% ami_thisQ$mms_id) %>% 
-  select(code,mms_id,total_min_mand,center,captures,ami) %>%
-  mutate(missing_resource_type = ifelse(mms_id %in% tor$mms_id, TRUE, FALSE))
